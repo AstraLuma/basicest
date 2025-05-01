@@ -1,0 +1,18 @@
+[project]
+name = "basicest"
+version = "0.1.0"
+description = "Minimal SSG"
+authors = [
+    {name = "Jamie Bliss",email = "jamie@ivyleav.es"}
+]
+license = {text = "GPL-3.0"}
+readme = "README.md"
+requires-python = ">=3.13,<4"
+dependencies = [
+    "jinjax (>=0.56,<0.57)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
