@@ -1,4 +1,4 @@
-"""Rebuild Sphinx documentation on changes, with hot reloading in the browser."""
+"""Rebuild Basicest site on changes, with hot reloading in the browser."""
 
 from __future__ import annotations
 

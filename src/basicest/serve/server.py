@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
     from starlette.types import Receive, Scope, Send
 
-    from sphinx_autobuild.filter import IgnoreFilter
+    from .filter import IgnoreFilter
 
 
 class RebuildServer:

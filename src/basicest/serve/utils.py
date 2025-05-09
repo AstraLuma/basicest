@@ -33,7 +33,7 @@ def open_browser(url_host: str, delay: float) -> None:
 
 
 def _log(text, *, colour):
-    print(f"{Fore.GREEN}[sphinx-autobuild] {colour}{text}{Style.RESET_ALL}")
+    print(f"{Fore.GREEN}[basicest-serve] {colour}{text}{Style.RESET_ALL}")
 
 
 def show_message(context: str, /) -> None:

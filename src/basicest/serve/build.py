@@ -1,4 +1,4 @@
-"""Logic for interacting with sphinx-build."""
+"""Logic for interacting with basicest-serve."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ class Builder:
         self.uri = f"http://{url_host}"
 
     def __call__(self, *, changed_paths: Sequence[Path]):
-        """Generate the documentation using ``sphinx``."""
+        """Generate the documentation using ``basicest``."""
         if changed_paths:
             cwd = Path.cwd()
             rel_paths = []
@@ -37,7 +37,7 @@ class Builder:
         try:
             subprocess.run([sys.executable] + py_args, check=True)
         except subprocess.CalledProcessError as e:
-            print(f"Sphinx exited with exit code: {e.returncode}")
+            print(f"Basicest exited with exit code: {e.returncode}")
             print(
                 "The server will continue serving the build folder, but the contents "
                 "being served are no longer in sync with the documentation sources. "
