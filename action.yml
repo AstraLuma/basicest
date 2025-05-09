@@ -1,5 +1,5 @@
-name: 'Upload Teahouse'
-description: 'Complete configure & upload'
+name: 'Basicest SSG Build'
+description: 'Build a Basicest project'
 inputs:
   root:
     description: 'Root directory of project'
@@ -20,3 +20,7 @@ runs:
       shell: bash
       run: |
         basicest ${{ inputs.root }} --out ${{ inputs.output }}
+
+branding:
+  icon: 'gift'
+  color: 'blue'
