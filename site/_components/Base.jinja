@@ -1,0 +1,115 @@
+{#def title #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{title}}</title>
+  <style>
+    :root {
+      /* halp */
+      --brand-color: #2C7596;
+      --dark-brand-color: #964e2c;
+      --contrast-color: #DDD;
+      --light-contrast-color: #DDD;
+      --dark-contrast-color: #222;
+
+      color-scheme: light dark;
+      background-color: light-dark(var(--light-contrast-color), var(--dark-contrast-color));
+      color: light-dark(var(--dark-brand-color), var(--brand-color));
+      font: 16pt sans-serif;
+      box-sizing: border-box;
+    }
+
+    body {
+      padding: 0;
+      margin: 0;
+    }
+
+    .main-header {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin: 1em 0;
+
+      nav ul {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        flex-direction: column;
+        list-style: none;
+        margin: 0.5rem;
+        padding: 0;
+        gap: 0.5em;
+
+        li {
+          text-align: left;
+        }
+
+        a {
+          display: block;
+          width: 20ch; /* ch units are "character" units. Approximately 1 letter per unit. */
+          padding: 1em;
+          background-color: light-dark(var(--brand-color), var(--dark-brand-color));
+          color: light-dark(var(--contrast-color), var(--light-contrast-color));
+          border-radius: 20px;
+          margin: 0 auto;
+        }
+
+        a:visited {
+          color: light-dark(var(--dark-contrast-color), var(--contrast-color));
+        }
+      }
+    }
+
+    main {
+      max-width: 70ch;
+      margin: 1rem auto;
+      padding: 0 0.5rem;
+
+      h1, h2 {
+        letter-spacing: 0.1rem;
+      }
+
+      p {
+        padding: 0 1rem;
+        line-height: 1.5rem;
+      }
+    }
+
+    footer {
+      font-variant: small-caps;
+      font-size: 0.8rem;
+      padding: 2rem;
+      & > * {
+        display: inline;
+        padding: 0 0.5em;
+      }
+    }
+
+    @media screen and (min-width: 900px) {
+      .main-header {
+        nav ul {
+          flex-direction: row;
+        }
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <nav class="main-nav">
+      <ul>
+        <li><a href="/">Frontpage</a></li>
+        <li><a href="https://github.com/AstraLuma/basicest">GitHub</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    {{content}}
+  </main>
+  <footer>
+    <div>Created by AstraLuma in a fit of bad ideas</div>
+    <a href="https://www.stealthiswebsite.art"><img src="/assets/steal-this-website.png" width="88" height="31"></a>
+  </footer>
+</body>
+</html>
