@@ -1,0 +1,22 @@
+name: 'Upload Teahouse'
+description: 'Complete configure & upload'
+inputs:
+  root:
+    description: 'Root directory of project'
+    required: true
+  output:  # id of input
+    description: 'Directory to build into'
+    required: true
+    default: .
+runs:
+  using: "composite"
+  steps:
+    - name: Install basicest
+      shell: bash
+      run: |
+        pip install git+https://github.com/AstraLuma/basicest.git
+
+    - name: Run basicest
+      shell: bash
+      run: |
+        basicest ${{ inputs.root }} --out ${{ inputs.output }}
