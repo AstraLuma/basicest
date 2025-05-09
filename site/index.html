@@ -7,4 +7,48 @@
     <li>Does not assume you're making a blog, gallery, or any other kind of site</li>
     <li>Does not use the wrong markdown dialect</li>
 </ul>
+
+<h2>Installation</h2>
+
+<p>Basicest is published in PyPI as <a href="https://pypi.org/project/basicest/"><tt>basicest</tt></a>.</p>
+
+<h2>Usage</h2>
+<ol>
+    <li>Make a project directory</li>
+    <li>Write some HTML files</li>
+    <li>Make a <tt>_components</tt> directory inside of your project</li>
+    <li>Make some <tt>.jinja</tt> files inside of <tt>_components</tt></li>
+    <li>Use your new components to simplify your HTML</li>
+</ol>
+<p>For an example, see <a href="https://github.com/AstraLuma/basicest/tree/trunk/site">this site's source</a>.</p>
+
+<h2>Use in Actions</h2>
+
+<p>An action for GitHub Action workflows is provided as <tt>AstraLuma/basicest@trunk</tt>. A simple example would be:</p>
+
+<pre>
+name: Site
+
+on:
+  push:
+
+permissions:
+  contents: read  # This is required for actions/checkout
+
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: AstraLuma/basicest@trunk
+        with:
+          root: site
+          output: ./_build
+</pre>
+
+<h2>Use in other CI</h2>
+<p>If you don't want to deal with all the Python installation, a container image is available as <tt>ghcr.io/astraluma/basicest</tt>.</p>
 </Base>
