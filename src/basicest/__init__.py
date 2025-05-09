@@ -128,7 +128,7 @@ def main():
     parser.add_argument("root", help="Project root directory", type=Path)
     parser.add_argument('-o', '--out', help="Output directory (Default: PROJECT/_build)", type=Path)
     args = parser.parse_args()
-    if args.out:
+    if not args.out:
         args.out = args.root / BUILD_OUTPUT
 
     project = Project(root=args.root, dest=args.out)
