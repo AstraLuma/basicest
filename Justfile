@@ -16,4 +16,8 @@ build:
 
 # Run a webserver on the included site
 serve:
-  poetry run basicest-serve site
+  poetry run basicest-serve site --open-browser
+
+# Build the image
+docker:
+  docker build .
