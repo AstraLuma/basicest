@@ -12,6 +12,10 @@ dependencies = [
     "jinjax (>=0.56,<0.57)"
 ]
 
+[project.scripts]
+basicest = 'basicest:main'
+
+
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
