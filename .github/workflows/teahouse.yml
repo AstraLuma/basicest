@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
       - uses: AstraLuma/basicest@trunk
         with:
-          project: .
+          root: .
           output: ./_build
       - uses: actions/upload-artifact@v4
         with:
