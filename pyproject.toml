@@ -12,6 +12,10 @@ dependencies = [
     "jinjax (>=0.56)"
 ]
 
+[project.urls]
+Homepage = "https://basicest.ivyleav.es/"
+Repository = "https://github.com/AstraLuma/basicest"
+
 [project.scripts]
 basicest = 'basicest:main'
 
