@@ -1,3 +1,4 @@
+import argparse
 from dataclasses import dataclass
 from functools import cached_property
 from pathlib import Path
@@ -120,3 +121,15 @@ class Project:
             else:
                 # This always succeeds
                 page.dstpath.write_text(str(contents))
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Minimal Static Site Generator")
+    parser.add_argument("root", help="Project root directory", type=Path)
+    parser.add_argument('-o', '--out', help="Output directory (Default: PROJECT/_build)", type=Path)
+    args = parser.parse_args()
+    if args.out:
+        args.out = args.root / BUILD_OUTPUT
+
+    project = Project(root=args.root, dest=args.out)
+    project.do_the_build()
