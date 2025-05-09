@@ -7,7 +7,7 @@ set windows-powershell := true
 
 # Set up dev environment
 install:
-  poetry install
+  poetry install --all-extras --all-groups
 
 
 # Build the included site
@@ -16,4 +16,4 @@ build:
 
 # Run a webserver on the included site
 serve:
-  poetry run python -m http.server -d site/_build -b 127.0.0.1 0
+  poetry run basicest-serve site
