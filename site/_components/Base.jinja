@@ -101,7 +101,7 @@
       <ul>
         {% for page in basicest.pages %}
         {%- if page.relpath.suffix == ".html" -%}
-        <li><a href="{{page.url}}">{{page.url}}</a></li>
+        <li><a href="{{page.url}}">{{page.raw_contents|htmltitle}}</a></li>
         {%- endif -%}
         {% endfor %}
         <li><a href="https://github.com/AstraLuma/basicest">GitHub</a></li>

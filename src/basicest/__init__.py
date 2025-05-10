@@ -3,13 +3,16 @@ from dataclasses import dataclass
 from functools import cached_property
 import logging
 from pathlib import Path
+import sys
 from typing import Protocol
 
+import jinja2
 import jinjax
 
 
 COMPONENTS_FOLDER = "_components"
 BUILD_OUTPUT = "_build"
+PYTHON_FILE = "__main__.py"
 
 
 class ProjectItem(Protocol):
@@ -28,6 +31,8 @@ class ProjectItem(Protocol):
     #: The contents of the item, after processing
     contents: str|bytes
 
+    def __eq__(self, other) -> bool: ...
+
 
 @dataclass
 class Asset:
@@ -38,6 +43,9 @@ class Asset:
     relpath: Path
     srcpath: Path
     dstpath: Path
+
+    def __eq__(self, other):
+        return self.srcpath == getattr(other, 'srcpath', None)
 
     @cached_property
     def url(self) -> str:
@@ -64,6 +72,9 @@ class JinjaFile:
     relpath: Path
     srcpath: Path
     dstpath: Path
+
+    def __eq__(self, other):
+        return self.srcpath == getattr(other, 'srcpath', None)
 
     @cached_property
     def url(self) -> str:
@@ -107,6 +118,10 @@ class Project:
         cat.add_folder(self.root / COMPONENTS_FOLDER)
         return cat
 
+    @property
+    def jinja(self) -> jinja2.environment.Environment:
+        return self.jinjax.jinja_env
+
     def _mkitem(self, srcpath: Path) -> ProjectItem:
         relpath = srcpath.relative_to(self.root)
         dstpath = self.dest / relpath
@@ -129,7 +144,27 @@ class Project:
                 pages.append(self._mkitem(dirpath / filename))
         return pages
 
+    def _import_python(self):
+        # FIXME: Only do this once per project
+        entry = self.root / PYTHON_FILE
+        if not entry.exists():
+            return
+        import __basicest__
+        # Register ourselves as the current project
+        __basicest__.project = self
+        # Save sys.path because we're going to munge it
+        oldpath = sys.path[:]
+        try:
+            sys.path.insert(0, str(self.root.absolute()))
+            code = compile(entry.read_text(), str(entry), 'exec')
+            g = {}
+            exec(code, globals=g, locals=g)
+        finally:
+            sys.path[:] = oldpath
+            del __basicest__.project
+
     def do_the_build(self):
+        self._import_python()
         existing_files = set(self.dest.glob('**'))
         for page in self.pages:
             print(f"{page.relpath}")
