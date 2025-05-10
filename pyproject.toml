@@ -30,7 +30,12 @@ basicest-serve = 'basicest.serve:main'
 
 [tool.poetry]
 requires-poetry = ">=2.0"
+packages = [
+    { include = "basicest", from = "src" },
+    { include = "__basicest__.py", from = "src" },
+]
 version = "0.0.0"
+
 
 [tool.poetry.requires-plugins]
 poetry-plugin-export = ">=1.8"
