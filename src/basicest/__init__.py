@@ -162,8 +162,7 @@ class Project:
         try:
             sys.path.insert(0, str(self.root.absolute()))
             code = compile(entry.read_text(), str(entry), 'exec')
-            g = {}
-            exec(code, globals=g, locals=g)
+            exec(code, {})
         finally:
             sys.path[:] = oldpath
             del __basicest__.project
