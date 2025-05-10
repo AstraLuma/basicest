@@ -1,0 +1,21 @@
+<Base title="GitHub Actions">
+<h1>Actions provided by Basicest</h1>
+<p>Basicest provides a first-party action for GitHub Actions workflows to perform builds without having to set up and install software yourself.</p>
+<p>It is called <tt>AstraLuma/basicest</tt> and can be invoked as:</p>
+<pre>
+- uses: AstraLuma/basicest@trunk
+  with:
+    root: site
+    output: ./_build
+</pre>
+
+<p>It takes two inputs, both of which are required:</p>
+<ul>
+    <li><tt>root</tt>: The root of your basicest project, the source you wish to build</li>
+    <li><tt>output</tt>: The output directory in which to put the results</li>
+</ul>
+
+<p>No outputs are produced. No environment variables or secrets are added.</p>
+
+<p>The environment's default Python is used, and the latest development version of basicest is used.</p>
+</Base>
