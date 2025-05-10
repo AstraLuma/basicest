@@ -107,9 +107,10 @@ class Project:
         return pages
 
     def do_the_build(self):
-        # FIXME: clean up destination
+        existing_files = set(self.dest.glob('**'))
         for page in self.pages:
             print(f"{page.relpath}")
+            existing_files -= {page.dstpath, *page.dstpath.parents}
             page.dstpath.parent.mkdir(parents=True, exist_ok=True)
             contents = page.contents
             if isinstance(contents, bytes):
@@ -122,6 +123,19 @@ class Project:
                 # This always succeeds
                 page.dstpath.write_text(str(contents))
 
+        # existing_files is now all the files/directories that were not generated
+
+        print("Cleaning up output directory...")
+        # First, remove the files (and file-likes)
+        for file in existing_files:
+            if not file.is_dir(follow_symlinks=False):
+                file.unlink(missing_ok=True)
+        # Then remove the directories. These should be empty, since they weren't
+        # the ancestor to anything that was generated, and the stale files were
+        # removed.
+        for file in existing_files:
+            if file.is_dir(follow_symlinks=False):
+                file.rmdir()
 
 def main():
     parser = argparse.ArgumentParser(description="Minimal Static Site Generator")
