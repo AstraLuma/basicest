@@ -1,9 +1,10 @@
 import argparse
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import cached_property
 import logging
 from pathlib import Path
 import sys
+import threading
 from typing import Protocol
 
 import jinja2
@@ -73,6 +74,8 @@ class JinjaFile:
     srcpath: Path
     dstpath: Path
 
+    _render_lock: threading.Lock = field(default_factory=threading.Lock)
+
     def __eq__(self, other):
         return self.srcpath == getattr(other, 'srcpath', None)
 
@@ -89,16 +92,19 @@ class JinjaFile:
 
     @cached_property
     def contents(self) -> bytes:
-        return self.project.jinjax.render(
-            str(self.relpath.with_suffix('')),
-            # Falsey source counts as no source, so handle empty files
-            _source=self.raw_contents or ' ',
-            _file_ext=self.relpath.suffix,
-            _globals={
-                'basicest': self.project,
-                'current_page': self,
-            }
-        )
+        if self._render_lock.locked():
+            raise RuntimeError("Recursive rendering; did you use .contents wrong?")
+        with self._render_lock:
+            return self.project.jinjax.render(
+                str(self.relpath.with_suffix('')),
+                # Falsey source counts as no source, so handle empty files
+                _source=self.raw_contents or ' ',
+                _file_ext=self.relpath.suffix,
+                _globals={
+                    'basicest': self.project,
+                    'current_page': self,
+                }
+            )
 
 
 ITEM_CLASSES = {
@@ -145,7 +151,6 @@ class Project:
         return pages
 
     def _import_python(self):
-        # FIXME: Only do this once per project
         entry = self.root / PYTHON_FILE
         if not entry.exists():
             return
