@@ -1,6 +1,7 @@
 import argparse
 from dataclasses import dataclass
 from functools import cached_property
+import logging
 from pathlib import Path
 from typing import Protocol
 
@@ -20,6 +21,8 @@ class ProjectItem(Protocol):
     srcpath: Path
     #: The path data is being written to
     dstpath: Path
+    #: Final URL (because Windows)
+    url: str
     #: The contents of the file, before processing
     raw_contents: str|bytes
     #: The contents of the item, after processing
@@ -35,6 +38,13 @@ class Asset:
     relpath: Path
     srcpath: Path
     dstpath: Path
+
+    @cached_property
+    def url(self) -> str:
+        url = '/' + str(self.relpath).replace('\\', '/')
+        if self.relpath.name == "index.html":
+            url = url.removesuffix("index.html")
+        return url
 
     @cached_property
     def raw_contents(self) -> bytes:
@@ -56,6 +66,13 @@ class JinjaFile:
     dstpath: Path
 
     @cached_property
+    def url(self) -> str:
+        url = '/' + str(self.relpath).replace('\\', '/')
+        if self.relpath.name == "index.html":
+            url = url.removesuffix("index.html")
+        return url
+
+    @cached_property
     def raw_contents(self) -> bytes:
         return self.srcpath.read_text()
 
@@ -63,7 +80,13 @@ class JinjaFile:
     def contents(self) -> bytes:
         return self.project.jinjax.render(
             str(self.relpath.with_suffix('')),
-            _source=self.raw_contents,
+            # Falsey source counts as no source, so handle empty files
+            _source=self.raw_contents or ' ',
+            _file_ext=self.relpath.suffix,
+            _globals={
+                'basicest': self.project,
+                'current_page': self,
+            }
         )
 
 
@@ -138,6 +161,7 @@ class Project:
                 file.rmdir()
 
 def main():
+    logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser(description="Minimal Static Site Generator")
     parser.add_argument("root", help="Project root directory", type=Path)
     parser.add_argument('-o', '--out', help="Output directory (Default: PROJECT/_build)", type=Path)

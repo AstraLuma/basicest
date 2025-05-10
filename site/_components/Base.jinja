@@ -99,7 +99,11 @@
   <header class="main-header">
     <nav class="main-nav">
       <ul>
-        <li><a href="/">Frontpage</a></li>
+        {% for page in basicest.pages %}
+        {%- if page.relpath.suffix == ".html" -%}
+        <li><a href="{{page.url}}">{{page.url}}</a></li>
+        {%- endif -%}
+        {% endfor %}
         <li><a href="https://github.com/AstraLuma/basicest">GitHub</a></li>
       </ul>
     </nav>
