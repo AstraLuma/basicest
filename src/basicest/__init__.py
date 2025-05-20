@@ -143,9 +143,8 @@ class Project:
         for dirpath, dirnames, filenames in self.root.walk():
             if COMPONENTS_FOLDER in dirnames:
                 dirnames.remove(COMPONENTS_FOLDER)
-            # FIXME: Compare to self.dest
-            if BUILD_OUTPUT in dirnames:
-                dirnames.remove(BUILD_OUTPUT)
+            if dirpath == self.dest.parent and self.dest.name in dirnames:
+                dirnames.remove(self.dest.name)
             for filename in filenames:
                 if filename == PYTHON_FILE:
                     continue
