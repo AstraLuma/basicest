@@ -14,6 +14,7 @@ import jinjax
 COMPONENTS_FOLDER = "_components"
 BUILD_OUTPUT = "_build"
 PYTHON_FILE = "__main__.py"
+EXCLUDE_DIRS = [".git"]
 
 
 class ProjectItem(Protocol):
@@ -145,6 +146,9 @@ class Project:
                 dirnames.remove(COMPONENTS_FOLDER)
             if dirpath == self.dest.parent and self.dest.name in dirnames:
                 dirnames.remove(self.dest.name)
+            for ex in EXCLUDE_DIRS:
+                if ex in dirnames:
+                    dirnames.remove(ex)
             for filename in filenames:
                 if filename == PYTHON_FILE:
                     continue
