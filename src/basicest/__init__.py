@@ -1,9 +1,13 @@
 import argparse
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from functools import cached_property
 import logging
 from pathlib import Path
+import platform
+import subprocess
 import sys
+import tempfile
 import threading
 from typing import Protocol
 
@@ -204,14 +208,63 @@ class Project:
             if file.is_dir(follow_symlinks=False):
                 file.rmdir()
 
+
+
+def _venv_bin(venv, cmd):
+    if platform.system() == "Windows":
+        return venv / "Scripts" / f"{cmd}.exe"
+    else:
+        return venv / "bin" / cmd
+
+
+@contextmanager
+def mkvenv(reqsfile):
+    """
+    Make a temporary venv
+    """
+    with tempfile.TemporaryDirectory() as vdir:
+        vdir = Path(vdir)
+        subprocess.run(
+            [sys.executable, '-m', 'venv', str(vdir)],
+            check=True
+        )
+
+        python = _venv_bin(vdir, "python")
+
+        subprocess.run(
+            [python, '-m', 'pip', "install", "basicest", "-r", reqsfile],
+            check=True
+        )        
+
+        yield vdir
+
+
+def bounce(venv: Path, indir: Path, outdir: Path):
+    b = _venv_bin(venv, "basicest")
+
+    subprocess.run(
+        [b, "--out", str(outdir.absolute()), str(indir.absolute())],
+        check=True
+    )        
+
+
 def main():
     logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser(description="Minimal Static Site Generator")
     parser.add_argument("root", help="Project root directory", type=Path)
     parser.add_argument('-o', '--out', help="Output directory (Default: PROJECT/_build)", type=Path)
+    parser.add_argument(
+        '-r', '--requirements', help="Requirements file (also enables creating a venv)",
+        type=Path, nargs="?", const="requirements.txt", default=None)
     args = parser.parse_args()
     if not args.out:
         args.out = args.root / BUILD_OUTPUT
 
-    project = Project(root=args.root, dest=args.out)
-    project.do_the_build()
+    if args.requirements is None:
+        # Run immediately
+        project = Project(root=args.root, dest=args.out)
+        project.do_the_build()
+    else:
+        # Create a venv and trampoline into it
+        with mkvenv(args.requirements) as venv:
+            bounce(venv, args.root, args.out)
