@@ -147,6 +147,8 @@ class Project:
             if BUILD_OUTPUT in dirnames:
                 dirnames.remove(BUILD_OUTPUT)
             for filename in filenames:
+                if filename == PYTHON_FILE:
+                    continue
                 pages.append(self._mkitem(dirpath / filename))
         return pages
 
