@@ -12,11 +12,11 @@ install:
 
 # Build the included site
 build:
-  poetry run basicest site
+  poetry run basicest site -r site/requirements.txt
 
 # Run a webserver on the included site
 serve:
-  poetry run basicest-serve site --open-browser --watch src
+  poetry run basicest-serve site --open-browser --watch src -r site/requirements.txt
 
 # Build the image
 docker:
