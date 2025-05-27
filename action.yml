@@ -25,7 +25,7 @@ runs:
     - name: Run basicest
       shell: bash
       run: |
-        basicest ${{ inputs.root }} --out ${{ inputs.output }} ${{ inputs.requirements != '' && format('-r ', inputs.requirements) || '' }}
+        basicest ${{ inputs.root }} --out ${{ inputs.output }} ${{ inputs.requirements != '' && format('-r {}', inputs.requirements) || '' }}
 
 branding:
   icon: 'gift'
