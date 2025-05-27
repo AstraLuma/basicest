@@ -24,6 +24,7 @@ jobs:
         with:
           root: site
           output: ./_build
+          requirements: site/requirements.txt
       - uses: actions/upload-artifact@v4
         with:
           name: website
