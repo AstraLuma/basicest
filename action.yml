@@ -14,7 +14,7 @@ runs:
     - name: Install basicest
       shell: bash
       run: |
-        pip install git+https://github.com/AstraLuma/basicest.git
+        pip install -e $GITHUB_ACTION_PATH
 
     - name: Run basicest
       shell: bash
