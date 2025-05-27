@@ -14,7 +14,7 @@ runs:
     - name: Install basicest
       shell: bash
       env:
-        POETRY_DYNAMIC_VERSIONING_OVERRIDE: basicest = ${{ github.action_ref }}
+        POETRY_DYNAMIC_VERSIONING_OVERRIDE: basicest = ${{ github.action_ref == 'trunk' && 'v999' || github.action_ref }}
       run: |
         pip install -e $GITHUB_ACTION_PATH
 
