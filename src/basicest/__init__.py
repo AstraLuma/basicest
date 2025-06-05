@@ -233,10 +233,13 @@ def mkvenv(reqsfile):
 
         PIPARGS = ["--no-input", "--disable-pip-version-check"]
 
-        subprocess.run(
-            [python, '-m', 'pip', "install", *PIPARGS, "basicest", "-r", reqsfile],
-            check=True
-        )        
+        try:
+            subprocess.run(
+                [python, '-m', 'pip', "install", *PIPARGS, "basicest", "-r", reqsfile],
+                check=True
+            )        
+        except subprocess.CalledProcessError as exc:
+            sys.exit(exc.returncode)
 
         yield vdir
 
@@ -244,10 +247,13 @@ def mkvenv(reqsfile):
 def bounce(venv: Path, indir: Path, outdir: Path):
     b = _venv_bin(venv, "basicest")
 
-    subprocess.run(
-        [b, "--out", str(outdir.absolute()), str(indir.absolute())],
-        check=True
-    )        
+    try:
+        subprocess.run(
+            [b, "--out", str(outdir.absolute()), str(indir.absolute())],
+            check=True
+        )
+    except subprocess.CalledProcessError as exc:
+        sys.exit(exc.returncode)
 
 
 def main():
