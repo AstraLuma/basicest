@@ -231,8 +231,10 @@ def mkvenv(reqsfile):
 
         python = _venv_bin(vdir, "python")
 
+        PIPARGS = ["--no-input", "--disable-pip-version-check"]
+
         subprocess.run(
-            [python, '-m', 'pip', "install", "basicest", "-r", reqsfile],
+            [python, '-m', 'pip', "install", *PIPARGS, "basicest", "-r", reqsfile],
             check=True
         )        
 
