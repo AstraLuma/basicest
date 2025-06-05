@@ -23,26 +23,22 @@ def htmltitle(contents):
 
 project.jinja.filters['htmltitle'] = htmltitle
 
+# Turns out the default theme has decent contrast in both light and dark modes
+pygments_formatter = pygments.formatters.HtmlFormatter(nowrap=True, nobackground=True)
+
+
 def pygments_highlight(contents, lang):
     if lang:
         lexer = pygments.lexers.get_lexer_by_name(lang)
     else:
         lexer = pygments.lexers.guess_lexer(contents)
-    return pygments.highlight(str(contents), lexer, pygments.formatters.HtmlFormatter())
+    return pygments.highlight(str(contents), lexer, pygments_formatter)
 
 
 project.jinja.filters['pygments_highlight'] = pygments_highlight
 
 
-class PygmentsExtension(jinja2.ext.Extension):
+def pygments_css():
+    return pygments_formatter.get_style_defs('pre')
 
-    tags = {"pygments_css"}
-
-    def parse(self, parser: "Parser") -> jinja2.nodes.Node:
-        formatter = pygments.formatters.HtmlFormatter()
-        lineno = next(parser.stream).lineno
-
-        node = jinja2.nodes.Output([jinja2.nodes.TemplateData(formatter.get_style_defs(), lineno=lineno)], lineno=lineno)
-        return node
-
-project.jinja.add_extension(PygmentsExtension)
+project.jinja.globals['pygments_css'] = pygments_css
