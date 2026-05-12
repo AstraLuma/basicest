@@ -44,7 +44,7 @@ jobs:
           name: website
           path: ./_build
       - name: Upload
-        uses: teahouse-hosting/upload@trunk
+        uses: teahouse-hosting/swiss-army-upload@trunk
         with:
-          domain: basicest.ivyleav.es
-          root: ./_build
+          src: ./_build
+          dest: tea://basicest.ivyleav.es/
